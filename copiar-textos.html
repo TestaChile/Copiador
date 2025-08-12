@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copiador de Textos Rápido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .text-box {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .text-box:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .text-box-header {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .text-box-title {
+            font-weight: 600;
+            color: #000;
+            font-size: 1rem;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #007bff, #6f42c1);
+        }
+
+        .text-content {
+            padding: 15px;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #000;
+            background: white;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        .add-text-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .add-text-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #000;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #000;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #000;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .text-box-header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+                padding: 10px 12px;
+            }
+
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+                flex: 1;
+            }
+
+            .text-content {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Copiador de Textos</h1>
+            <p>Copia rápidamente tus textos predeterminados</p>
+        </div>
+        
+        <div class="content">
+            <div id="textBoxes">
+                <!-- Las cajas de texto se generarán aquí -->
+            </div>
+            
+            <button class="add-text-btn" onclick="openModal()">
+                ➕ Agregar Nuevo Texto
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar textos -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Agregar Nuevo Texto</h2>
+            <form id="textForm">
+                <div class="form-group">
+                    <label for="textTitle">Título:</label>
+                    <input type="text" id="textTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="textContent">Contenido:</label>
+                    <textarea id="textContent" required placeholder="Escribe aquí tu texto predeterminado..."></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div id="notification" class="notification">
+        ✅ Texto copiado al portapapeles
+    </div>
+
+    <script>
+        // Datos predeterminados
+        let textData = [
+            {
+                title: "Opciones de Despacho",
+                content: "Opciones de Despacho Disponibles:\n\n📍 Retiro en Persona:\nMetro Ñuble (de 12:00 a 15:00 hrs, previa coordinación).\nMetro El Golf (después de las 19:00 hrs).\n\n🚴 Despacho en Bicicleta:\n$1.500 para comunas cercanas a Santiago y Las Condes (sujeto a distancia).\nNo disponible para zonas lejanas (ej: Maipú, San Bernardo, Puente Alto, etc.).\n\n📦 Despacho a Región/Chile:\nStarken (envío por pagar, costo según destino)."
+            },
+            {
+                title: "Mi página web",
+                content: "Mi página web: https://linktr.ee/testa.cl"
+            },
+            {
+                title: "Mi Catálogo",
+                content: "Mi Catálogo: https://testachile.github.io/Catalogo3D/"
+            },
+            {
+                title: "Mi Instagram",
+                content: "Mi Instagram: https://www.instagram.com/testa.cl"
+            }
+        ];
+
+        // Variables para edición
+        let editingIndex = -1;
+
+        // Cargar datos del localStorage si existen
+        function loadData() {
+            const saved = localStorage.getItem('textCopierData');
+            if (saved) {
+                textData = JSON.parse(saved);
+            }
+            renderTextBoxes();
+        }
+
+        // Guardar datos en localStorage
+        function saveData() {
+            localStorage.setItem('textCopierData', JSON.stringify(textData));
+        }
+
+        // Renderizar las cajas de texto
+        function renderTextBoxes() {
+            const container = document.getElementById('textBoxes');
+            container.innerHTML = '';
+
+            textData.forEach((item, index) => {
+                const textBox = document.createElement('div');
+                textBox.className = 'text-box';
+                textBox.innerHTML = `
+                    <div class="text-box-header">
+                        <span class="text-box-title">${item.title}</span>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="copy-btn" onclick="copyText(${index})">
+                                📋 Copiar
+                            </button>
+                            <button class="copy-btn" style="background: linear-gradient(135deg, #ffc107, #e0a800);" onclick="editText(${index})">
+                                ✏️
+                            </button>
+                            <button class="copy-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);" onclick="deleteText(${index})">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-content">${item.content}</div>
+                `;
+                container.appendChild(textBox);
+            });
+        }
+
+        // Copiar texto al portapapeles
+        async function copyText(index) {
+            const text = textData[index].content;
+            const button = event.target;
+            
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // Cambiar el botón temporalmente
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ ¡Copiado!';
+                button.classList.add('copied');
+                
+                // Mostrar notificación
+                showNotification();
+                
+                // Restaurar el botón después de 2 segundos
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback para navegadores que no soportan clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                showNotification();
+            }
+        }
+
+        // Mostrar notificación
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Eliminar texto
+        function deleteText(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este texto?')) {
+                textData.splice(index, 1);
+                saveData();
+                renderTextBoxes();
+            }
+        }
+
+        // Editar texto
+        function editText(index) {
+            editingIndex = index;
+            const item = textData[index];
+            
+            document.getElementById('modalTitle').textContent = 'Editar Texto';
+            document.getElementById('textTitle').value = item.title;
+            document.getElementById('textContent').value = item.content;
+            document.getElementById('saveBtn').textContent = 'Actualizar';
+            
+            openModal();
+        }
+
+        // Abrir modal
+        function openModal() {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('textTitle').focus();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('textForm').reset();
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = 'Agregar Nuevo Texto';
+            document.getElementById('saveBtn').textContent = 'Guardar';
+        }
+
+        // Manejar envío del formulario
+        document.getElementById('textForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('textTitle').value;
+            const content = document.getElementById('textContent').value;
+            
+            if (editingIndex >= 0) {
+                // Editar texto existente
+                textData[editingIndex] = { title, content };
+            } else {
+                // Agregar nuevo texto
+                textData.push({ title, content });
+            }
+            
+            saveData();
+            renderTextBoxes();
+            closeModal();
+        });
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Inicializar la aplicación
+        loadData();
+    </script>
+</body>
+</html>
