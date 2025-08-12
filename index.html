@@ -42,14 +42,14 @@
         &quot;theme_color&quot;: &quot;#000000&quot;,
         &quot;icons&quot;: [
             {
-                &quot;src&quot;: &quot;Logo_InteligenciaArtificial_01.png&quot;,
+                &quot;src&quot;: &quot;data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'&gt;&lt;rect width='192' height='192' fill='%23ffffff'/&gt;&lt;image href='Logo_InteligenciaArtificial_01.png' x='24' y='24' width='144' height='144'/&gt;&lt;/svg&gt;&quot;,
                 &quot;sizes&quot;: &quot;192x192&quot;,
-                &quot;type&quot;: &quot;image/png&quot;
+                &quot;type&quot;: &quot;image/svg+xml&quot;
             },
             {
-                &quot;src&quot;: &quot;Logo_InteligenciaArtificial_01.png&quot;,
+                &quot;src&quot;: &quot;data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'&gt;&lt;rect width='512' height='512' fill='%23ffffff'/&gt;&lt;image href='Logo_InteligenciaArtificial_01.png' x='64' y='64' width='384' height='384'/&gt;&lt;/svg&gt;&quot;,
                 &quot;sizes&quot;: &quot;512x512&quot;,
-                &quot;type&quot;: &quot;image/png&quot;
+                &quot;type&quot;: &quot;image/svg+xml&quot;
             }
         ]
     }">
@@ -331,10 +331,15 @@
             }
 
             .copy-btn {
-                width: 100%;
-                justify-content: center;
-                padding: 10px;
+                padding: 8px;
                 flex: 1;
+                font-size: 0.8rem;
+            }
+
+            .text-box-header > div {
+                display: grid !important;
+                grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+                gap: 5px !important;
             }
 
             .text-content {
@@ -458,6 +463,12 @@
                             <button class="copy-btn" onclick="copyText(${index})">
                                 📋 Copiar
                             </button>
+                            <button class="copy-btn" style="background: linear-gradient(135deg, #6c757d, #545b62);" onclick="moveUp(${index})" ${index === 0 ? 'disabled style="opacity: 0.5;"' : ''}>
+                                ⬆️
+                            </button>
+                            <button class="copy-btn" style="background: linear-gradient(135deg, #6c757d, #545b62);" onclick="moveDown(${index})" ${index === textData.length - 1 ? 'disabled style="opacity: 0.5;"' : ''}>
+                                ⬇️
+                            </button>
                             <button class="copy-btn" style="background: linear-gradient(135deg, #ffc107, #e0a800);" onclick="editText(${index})">
                                 ✏️
                             </button>
@@ -515,6 +526,28 @@
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
+        }
+
+        // Mover elemento hacia arriba
+        function moveUp(index) {
+            if (index > 0) {
+                const temp = textData[index];
+                textData[index] = textData[index - 1];
+                textData[index - 1] = temp;
+                saveData();
+                renderTextBoxes();
+            }
+        }
+
+        // Mover elemento hacia abajo
+        function moveDown(index) {
+            if (index < textData.length - 1) {
+                const temp = textData[index];
+                textData[index] = textData[index + 1];
+                textData[index + 1] = temp;
+                saveData();
+                renderTextBoxes();
+            }
         }
 
         // Eliminar texto
