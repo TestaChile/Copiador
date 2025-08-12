@@ -3,7 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copiador de Textos Rápido</title>
+    <title>Copiador de Textos - TESTA</title>
+    
+    <!-- Configuración para iOS Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TESTA Textos">
+    
+    <!-- Íconos para diferentes tamaños iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="Logo_InteligenciaArtificial_01.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="Logo_InteligenciaArtificial_01.png">
+    
+    <!-- Ícono genérico para otros dispositivos -->
+    <link rel="icon" type="image/png" href="Logo_InteligenciaArtificial_01.png">
+    
+    <!-- Meta tags adicionales para PWA -->
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Copiador de textos rápido para TESTA - Copia tus textos predeterminados con un toque">
+    
+    <!-- Prevenir zoom en iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Web App Manifest inline -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        &quot;name&quot;: &quot;TESTA Copiador de Textos&quot;,
+        &quot;short_name&quot;: &quot;TESTA Textos&quot;,
+        &quot;description&quot;: &quot;Copia rápidamente tus textos predeterminados&quot;,
+        &quot;start_url&quot;: &quot;.&quot;,
+        &quot;display&quot;: &quot;standalone&quot;,
+        &quot;background_color&quot;: &quot;#ffffff&quot;,
+        &quot;theme_color&quot;: &quot;#000000&quot;,
+        &quot;icons&quot;: [
+            {
+                &quot;src&quot;: &quot;Logo_InteligenciaArtificial_01.png&quot;,
+                &quot;sizes&quot;: &quot;192x192&quot;,
+                &quot;type&quot;: &quot;image/png&quot;
+            },
+            {
+                &quot;src&quot;: &quot;Logo_InteligenciaArtificial_01.png&quot;,
+                &quot;sizes&quot;: &quot;512x512&quot;,
+                &quot;type&quot;: &quot;image/png&quot;
+            }
+        ]
+    }">
     <style>
         * {
             margin: 0;
@@ -258,11 +307,16 @@
             }
 
             .header h1 {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
 
             .header p {
                 font-size: 0.85rem;
+            }
+            
+            .header img {
+                width: 32px !important;
+                height: 32px !important;
             }
 
             .content {
@@ -307,7 +361,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📱 Copiador de Textos</h1>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+                <img src="Logo_InteligenciaArtificial_01.png" alt="TESTA Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+                <h1>TESTA - Copiador de Textos</h1>
+            </div>
             <p>Copia rápidamente tus textos predeterminados</p>
         </div>
         
@@ -529,4 +586,3 @@
     </script>
 </body>
 </html>
-
